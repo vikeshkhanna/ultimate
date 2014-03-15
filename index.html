@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Ultimate Tic Tac Toe</title>
+			<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+			<script src="http://d3js.org/d3.v3.min.js"></script>
+			<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+			<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+			<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+			<style>
+				table 
+				{
+					font-size:20px;
+					border-collapse: collapse;
+				}
+
+				table.uboard td {
+					border: 2px solid black;
+				}
+
+				table.uboard tr td
+				{
+					padding:10px;
+				}
+
+				table.board tr td
+				{
+					padding:18px;
+				}
+
+				table.board td {
+					border: 1px solid black;
+				}
+
+				table tr:first-child td {
+					border-top: 0;
+				}
+				table tr:last-child td {
+					border-bottom: 0;
+				}
+				table tr td:first-child,
+				table tr th:first-child {
+					border-left: 0;
+				}
+				table tr td:last-child,
+				table tr th:last-child {
+					border-right: 0;
+				}
+
+
+			</style>
+
+			<script>
+
+				function make_board(columns, predicate)
+				{
+						var table = document.createElement("table");
+						table = d3.select(table).attr("class", "board");
+						
+						var thead = table.append("thead"),
+								tbody = table.append("tbody");
+
+							// Create a row for each object in the data
+							var rows = tbody.selectAll("tr")
+								.data(columns)
+								.enter()
+								.append("tr");
+
+							// Create a cell in each row for each column
+							var cells = rows.selectAll("td")
+							.data(function(row) {
+										return row;
+								})
+							.enter()
+							.append("td")
+							.html(function(d) {
+									return d;
+								});
+
+						if(predicate===true){
+							table = table.style("background-color", "lightgreen");
+						}
+						return table[0][0];
+				}
+
+				function tabulate(data, r, c)
+				{
+						udata = Array(data.length);
+
+						for(var i=0; i<data.length;i++)
+						{
+							udata[i] = Array(data[i].length);
+							for(var j=0;j<data[i].length;j++)
+							{
+								udata[i][j] = {}
+								udata[i][j].r = i;
+								udata[i][j].c = j;
+								udata[i][j].data = data[i][j];
+							}
+						}
+
+						var uboard = d3.select("body").append("table").attr("class", "uboard")
+						ubody = uboard.append("tbody")
+
+						var urows = ubody.selectAll("tr")
+							.data(udata)
+							.enter()
+							.append("tr")
+
+						var ucells = urows.selectAll("td")
+								.data(function(row) {
+									return row;
+								})
+							.enter()
+							.append("td")
+							.append(function(d){
+								pred = (d.r===r  && d.c===c);
+								return make_board(d.data, pred);
+							});
+					}	
+
+					$(document).ready(function(){
+						data = [
+										[
+											[[1,2,3],[4,5,6],[7,8,9]], 
+											[[10, 11, 12], [13,14,15], [16,17,18]], 
+											[[19,20,21],[22,23,24], [25,26,27]]
+										],
+										[
+											[[1,2,3],[4,5,6],[7,8,9]], 
+											[[10, 11, 12], [13,14,15], [16,17,18]], 
+											[[19,20,21],[22,23,24], [25,26,27]]
+										],
+										[
+											[[1,2,3],[4,5,6],[7,8,9]], 
+											[[10, 11, 12], [13,14,15], [16,17,18]], 
+											[[19,20,21],[22,23,24], [25,26,27]]
+										]
+									];
+						tabulate(data, 1, 1);
+					});
+			</script>
+		</head>
+
+		<body>
+		</body>
+</html>
