@@ -14,9 +14,24 @@
 					font-weight:bold;
 				}
 
+				.win
+				{
+					font-weight:bold;
+				}
+
 				.hold-X
 				{
 					color:red;
+				}
+
+				.win-X
+				{
+					background-color:lightcoral;
+				}
+
+				.win-Y
+				{
+					background-color:lightgreen;
 				}
 
 				.hold-O
@@ -73,8 +88,9 @@
 				table.board tr td
 				{
 					padding:15px;
-					width:50px;
-					height:50px;
+					width:60px;
+					height:60px;
+					text-align:center;
 				}
 
 				table.board td {
@@ -86,7 +102,7 @@
 				var X='X';
 				var O='O';
 				var Z='-';
-				var current_state;
+				var current_state = {}
 
 				function get_board_id(r, c)
 				{
@@ -162,8 +178,27 @@
 				function mark_current(r, c)
 				{
 					var current = d3.select("#"+get_board_id(1,1))
-					current.style("background-color", "lightgreen");
 					return current;
+				}
+
+				function is_finished(r, c)
+				{
+					data = current_state.data;
+					
+					if(current_state.winners[r][c]!=null){
+						return true;
+					}
+
+					for(var i=0;i<3;i++)
+					{
+						for(var j=0;j<3;j++)
+						{
+							if(data[r][c][i][j]===Z) 
+								return false;
+						}
+					}
+
+					return true;
 				}
 
 				function make_board(udata)
@@ -230,7 +265,30 @@
 										if(val===Z && is_board_playable(d.r, d.c)){
 											return "playable-cell";	
 										}
-										else if(val===X)
+		
+										obj = current_state.winners[d.r][d.c];
+
+										if(obj!=null && obj.winner!=null){
+											classes = "win ";	
+											cells = obj.cells;
+											console.log(cells);
+											
+											if(obj.winner==X){
+												classes += "win-X";	
+											}
+											else{
+												classes += "win-Y";
+											}
+	
+											for(var i=0;i<cells.length;i++){
+												if(cells[i][0]===d.i && cells[i][1]===d.j)
+												{
+													return classes;
+												}
+											}
+										}
+										
+										if(val===X)
 										{
 											return "hold hold-X";
 										}
@@ -253,7 +311,37 @@
 				function evaluate(move)
 				{
 					m = move;
-					current_state.data[m.r][m.c][m.i][m.j]=m.player;
+					console.log("Evaluating")
+					console.log(m);
+
+					data = current_state.data;
+					board = data[m.r][m.c];
+					board[m.i][m.j]=m.player;
+					
+					if(current_state.winners[m.r][m.c]===null){
+						for(var i=0; i<3; i++){
+							if(board[i][0]===m.player && board[i][1]===m.player && board[i][2]===m.player){
+								current_state.winners[m.r][m.c] = { winner:m.player, cells: [[i,0],[i,1],[i,2]]};
+								break;
+							}
+
+							if(board[0][i]===m.player && board[1][i]===m.player && board[2][i]===m.player){
+								current_state.winners[m.r][m.c] = { winner:m.player, cells: [[0,i],[1,i],[2,i]]};
+								break;
+							}
+						}
+
+						if(board[0][0]===m.player && board[1][1]===m.player && board[2][2]===m.player){
+							current_state.winners[m.r][m.c] = { winner:m.player, cells: [[0,0],[1,1],[2,2]]};
+						}
+
+						if(board[0][2]===m.player && board[1][1]===m.player && board[2][0]===m.player){
+							current_state.winners[m.r][m.c] = { winner:m.player, cells: [[0,2],[1,1],[2,0]]};
+						}
+					}
+
+					current_state.r = is_finished(m.i, m.j) ? -1 : m.i;
+					current_state.c = is_finished(m.i, m.j) ? -1 : m.j;
 				}
 
 				function tabulate(data)
@@ -299,8 +387,20 @@
 					function init()
 					{
 						current_state = deserialize();
-						var uboard = tabulate(current_state.data);
-						mark_current(current_state.r, current_state.c);
+						current_state.r = current_state.c = -1;
+						current_state.player = X;
+						current_state.winners = []
+								
+						for(var i=0; i<3; i++)
+						{
+							current_state.winners[i] = [];
+							for(var j=0; j<3; j++)
+							{
+								current_state.winners[i][j] = null;
+							}
+						}
+
+						restart();
 					}
 
 					function restart()
