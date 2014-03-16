@@ -31,7 +31,7 @@
 
 				.win-Y
 				{
-					background-color:lightgreen;
+					background-color:lightblue;
 				}
 
 				.hold-O
@@ -109,6 +109,11 @@
 					return "r"+r+"c"+c;
 				}
 
+				function get_opponent(player)
+				{
+					return (player===X?O:X);
+				}
+
 				function get_cell_id(r,c,i,j)
 				{
 					return get_board_id(r,c)+"i"+i+"j"+j;
@@ -119,6 +124,31 @@
 					if(current_state.r===-1 || (current_state.r===r && current_state.c===c)){
 						return true;
 					}
+
+					return false;
+				}
+
+				function is_super_winner(player)
+				{
+						winners = current_state.winners;
+
+						for(var i=0; i<3; i++){
+							if(winners[i][0].winner===player && winners[i][1].winner===player && winners[i][2].winner===player){
+								return true;
+							}
+
+							if(winners[0][i].winner===player && winners[1][i].winner==m.player && winners[2][i].winner===player){
+								return true;
+							}
+						}
+
+						if(winners[0][0]===player && winners[1][1].winner===player && winners[2][2].winner===player){
+							return true;
+						}
+
+						if(winners[0][2].winner===player && winners[1][1].winner===player && winners[2][0].winner===player){
+							return true;
+						}
 
 					return false;
 				}
@@ -184,8 +214,8 @@
 				function is_finished(r, c)
 				{
 					data = current_state.data;
-					
-					if(current_state.winners[r][c]!=null){
+
+					if(current_state.winners[r][c].winner!=null){
 						return true;
 					}
 
@@ -271,9 +301,8 @@
 										if(obj!=null && obj.winner!=null){
 											classes = "win ";	
 											cells = obj.cells;
-											console.log(cells);
 											
-											if(obj.winner==X){
+											if(obj.winner===X){
 												classes += "win-X";	
 											}
 											else{
@@ -299,7 +328,7 @@
 									})
 							.on("click", function(d){
 									if(d.value===Z && is_board_playable(d.r, d.c)){
-										move = {player: X, r:d.r, c:d.c, i:d.i, j:d.j};
+										move = {player: current_state.player, r:d.r, c:d.c, i:d.i, j:d.j};
 										evaluate(move);
 										restart();
 									}
@@ -318,7 +347,7 @@
 					board = data[m.r][m.c];
 					board[m.i][m.j]=m.player;
 					
-					if(current_state.winners[m.r][m.c]===null){
+					if(current_state.winners[m.r][m.c].winner===null){
 						for(var i=0; i<3; i++){
 							if(board[i][0]===m.player && board[i][1]===m.player && board[i][2]===m.player){
 								current_state.winners[m.r][m.c] = { winner:m.player, cells: [[i,0],[i,1],[i,2]]};
@@ -340,8 +369,12 @@
 						}
 					}
 
+					if(is_super_winner(X)){
+						alert("You have won!");
+					}
 					current_state.r = is_finished(m.i, m.j) ? -1 : m.i;
 					current_state.c = is_finished(m.i, m.j) ? -1 : m.j;
+					current_state.player = get_opponent(m.player);
 				}
 
 				function tabulate(data)
@@ -396,7 +429,7 @@
 							current_state.winners[i] = [];
 							for(var j=0; j<3; j++)
 							{
-								current_state.winners[i][j] = null;
+								current_state.winners[i][j] = {winner:null, cells:[]};
 							}
 						}
 
