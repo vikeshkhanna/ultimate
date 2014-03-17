@@ -29,7 +29,7 @@
 					background-color:lightcoral;
 				}
 
-				.win-Y
+				.win-O
 				{
 					background-color:lightblue;
 				}
@@ -49,9 +49,14 @@
 					cursor:pointer;
 				}
 
-				.playable-cell:hover
+				.playable-cell-X:hover
 				{
 					background-color: lightcoral;
+				}
+
+				.playable-cell-O:hover
+				{
+					background-color: lightblue;
 				}
 
 				table 
@@ -137,7 +142,7 @@
 								return true;
 							}
 
-							if(winners[0][i].winner===player && winners[1][i].winner==m.player && winners[2][i].winner===player){
+							if(winners[0][i].winner===player && winners[1][i].winner==player && winners[2][i].winner===player){
 								return true;
 							}
 						}
@@ -313,21 +318,15 @@
 										var val = current_state.data[d.r][d.c][d.i][d.j];
 
 										if(val===Z && is_board_playable(d.r, d.c)){
-											return "playable-cell";	
-										}
+												return "playable-cell playable-cell-"+current_state.player;
+											}
 		
 										obj = current_state.winners[d.r][d.c];
 
 										if(obj!=null && obj.winner!=null){
 											classes = "win ";	
 											cells = obj.cells;
-											
-											if(obj.winner===X){
-												classes += "win-X";	
-											}
-											else{
-												classes += "win-Y";
-											}
+											classes = "win win-"+obj.winner;
 	
 											for(var i=0;i<cells.length;i++){
 												if(cells[i][0]===d.i && cells[i][1]===d.j)
@@ -336,15 +335,7 @@
 												}
 											}
 										}
-										
-										if(val===X)
-										{
-											return "hold hold-X";
-										}
-										else if(val===O)
-										{
-											return "hold hold-O";
-										}
+										return "hold hold-"+val;	
 									})
 							.on("click", function(d){
 									if(d.value===Z && is_board_playable(d.r, d.c)){
