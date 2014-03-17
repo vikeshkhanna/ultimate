@@ -191,23 +191,21 @@ def uset(uboard, r, c, i, j, val):
 	uboard[3*r+i][3*c+j] = val
 
 def local_reward(board, player):
-	new_board = copy.deepcopy(board)
-
 	for i in range(N):
 		for j in range(N):
-			if new_board[i][j]==Z:
-				original = new_board[i][j]
-				new_board[i][j]=player
-				if is_winner(new_board, player):
+			original = board[i][j]
+			if original==Z:
+				board[i][j]=player
+				if is_winner(board, player):
 					return 1
-				new_board[i][j] = original
+				board[i][j] = original
 
 	return 0
 
-def board_stats(board, player):
-	l1 = is_winner(board, player)+0
-	l2 = is_winner(board, player)+0
-	return 2*R*l1 + R*l2
+def board_stats(board, winners, r, c, player):
+	l1 = (winners[r][c]==player)+0
+	l2 = local_reward(board, player)
+	return 3*R*l1 + R*l2
 
 def stats(uboard, player):
 	R = 1
@@ -218,7 +216,7 @@ def stats(uboard, player):
 	for i in range(N):
 		for j in range(N):
 			board = get_board(uboard, i, j)
-			total += board_stats(board, player)
+			total += board_stats(board, winners, i, j, player)
 
 	if get_super_winner(uboard)==player:
 		total += 100*R
@@ -226,12 +224,10 @@ def stats(uboard, player):
 	for i in range(N):
 		for j in range(N):
 			original = winners[i][j]
-			board = get_board(uboard, i, j)
-			advantage = local_reward(board, player)
 
 			if original == None:
 				winners[i][j] = player
-				total += (advantage+1)*25*R*((get_super_winner_inner(winners)==player)+0)
+				total += 25*R*((get_super_winner_inner(winners)==player)+0)
 				winners[i][j] = original
 	
 	return total
