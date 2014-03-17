@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Ultimate Tic Tac Toe</title>
@@ -204,6 +204,26 @@
 					return {r:r, c:c, data:data};
 				}
 
+				function serialize(state)
+				{
+					data = state.data;
+					lst = [state.player, state.r + " " + state.c];
+
+					for(var r=0; r<9; r++)
+					{
+						str = "";
+						
+						for(var c=0; c<9; c++)
+						{
+							str += data[Math.floor(r/3)][Math.floor(c/3)][r%3][c%3];
+						}
+
+						lst.push(str);
+					}		
+
+					return lst.join("\n");
+				}
+
 
 				function mark_current(r, c)
 				{
@@ -375,6 +395,7 @@
 					current_state.r = is_finished(m.i, m.j) ? -1 : m.i;
 					current_state.c = is_finished(m.i, m.j) ? -1 : m.j;
 					current_state.player = get_opponent(m.player);
+					console.log(serialize(current_state));
 				}
 
 				function tabulate(data)
