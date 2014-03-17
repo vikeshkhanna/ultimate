@@ -160,19 +160,7 @@
 
 				function deserialize(data)
 				{
-					var sample = ["X",
-												"-1 -1",
-												"---------",
-												"---------", 
-												"--X------",
-												"---------",
-												"----X----",
-												"---------",
-												"------O--",
-												"---------",
-												"---------"].join("\n");
-
-					var list = sample.split("\n");
+					var list = data.split("\n");
 					player = list[0];
 					pos = list[1].split(" ");
 					r = parseInt(pos[0]);
@@ -339,13 +327,31 @@
 									})
 							.on("click", function(d){
 									if(d.value===Z && is_board_playable(d.r, d.c)){
+										// This will always be X
 										move = {player: current_state.player, r:d.r, c:d.c, i:d.i, j:d.j};
 										evaluate(move);
 										restart();
+										ai();
 									}
 								});
 
 						return table;
+				}
+	
+				function ai()
+				{
+					$.ajax({
+								url: "api/move.php",
+								type: "GET",
+								data: {"state" : serialize(current_state)}, 
+								dataType:"json",
+								success: function(response){
+									p = response["state"].split(" ");
+									move = {player: O, r:parseInt(p[0]), c:parseInt(p[1]), i:parseInt(p[2]), j:parseInt(p[3])};
+									evaluate(move);
+									restart();
+								}
+							});
 				}
 
 				function evaluate(move)
@@ -431,8 +437,19 @@
 
 					function init()
 					{
-						current_state = deserialize();
-						current_state.r = current_state.c = -1;
+							var sample = ["X",
+												"-1 -1",
+												"---------",
+												"---------", 
+												"---------",
+												"---------",
+												"---------",
+												"---------",
+												"---------",
+												"---------",
+												"---------"].join("\n");
+
+						current_state = deserialize(sample);
 						current_state.player = X;
 						current_state.winners = []
 								
