@@ -9,6 +9,7 @@
 			<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 			<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 			<script src="js/blockui.js"></script>
+			<script src="js/uuid.js"></script>
 
 			<style>
 				body
@@ -113,7 +114,16 @@
 				var X='X';
 				var O='O';
 				var Z='-';
-				var current_state = {}
+				var signs = [X, O, Z];
+
+				// current_state maintains current state of the game. 
+				// player: Next player to play
+				// r, c: Co-ordinates of next board to play on
+				// winners : {winner, cells} r x c, maintains the winner of boards and the cells that lead to win. May have Z for tied boards
+				var current_state = {};
+
+				var timestamp=0;
+				var game_id=0;	
 				var uboard_container = "#uboard-container";
 
 				function get_board_id(r, c)
@@ -154,7 +164,7 @@
 							}
 						}
 
-						if(winners[0][0]===player && winners[1][1].winner===player && winners[2][2].winner===player){
+						if(winners[0][0].winner===player && winners[1][1].winner===player && winners[2][2].winner===player){
 							return true;
 						}
 
@@ -224,6 +234,100 @@
 					return lst.join("\n");
 				}
 
+				function is_tied(r, c)
+				{
+					data = current_state.data[r][c];
+					for(var i=0; i<3; i++)
+					{
+						cache = {}
+
+						for(var j=0; j<4;j++)
+						{
+							cache[j] = {}
+
+							for(var k=0; k<signs.length;k++)
+							{
+								cache[j][signs[k]]=0;
+							}
+						}
+
+						for(var j=0;j<3;j++)
+						{
+							cache[0][data[i][j]]+=1;
+							cache[1][data[j][i]]+=1;
+							cache[2][data[j][j]]+=1;
+							cache[3][data[j][3-j-1]]+=1;
+						}
+
+						for (var j=0;j<4;j++)
+						{
+							// No tie if either no X, or no O and at least one empty space -- To ensure we dont consider a win as tie
+							if((cache[j][X]===0 || cache[j][O]===0) && cache[j][Z]!=0)
+							{
+								return false;
+							}
+						}
+					}
+
+					return true;
+				}
+
+				function is_super_tied()
+				{
+					data = current_state.winners;
+
+					for(var i=0; i<3; i++)
+					{
+						cache = {}
+
+						for(var j=0; j<4;j++)
+						{
+							cache[j] = {}
+
+							for(var k=0; k<signs.length;k++)
+							{
+								cache[j][signs[k]]=0;
+							}
+						}
+						
+						for(var j=0;j<3;j++)
+						{
+							cache[0][data[i][j].winner]+=1;
+							cache[1][data[j][i].winner]+=1;
+							cache[2][data[j][j].winner]+=1;
+							cache[3][data[j][3-j-1].winner]+=1;
+						}
+
+						// Not tied only if either no X or no Y and no board is tied
+						for (var j=0;j<4;j++)
+						{
+							console.log(cache);
+							if((cache[j][X]===0 || cache[j][O]===0) && cache[j][Z]===0){
+								return false;
+							}
+						}
+					}
+
+					return true;
+				}
+
+				// Returns true if all the cells have been occupied
+				function is_full(r, c)
+				{
+					data = current_state.data[r][c];
+
+					for(var i=0;i<3;i++)
+					{
+						for(var j=0;j<3;j++)
+						{
+							if(data[i][j]===Z) 
+								return false;
+						}
+					}
+
+					return true;
+				}
+
 				function is_finished(r, c)
 				{
 					data = current_state.data;
@@ -231,17 +335,8 @@
 					if(current_state.winners[r][c].winner!=null){
 						return true;
 					}
-
-					for(var i=0;i<3;i++)
-					{
-						for(var j=0;j<3;j++)
-						{
-							if(data[r][c][i][j]===Z) 
-								return false;
-						}
-					}
-
-					return true;
+			
+					return is_full(r,c);
 				}
 
 				function make_board(udata)
@@ -340,6 +435,7 @@
 	
 				function ai()
 				{
+					// Send request to AI to make the next move
 					$.ajax({
 								url: "api/move.php",
 								type: "GET",
@@ -357,8 +453,39 @@
 									$(selector).css('background-color', 'yellow');
 									$(selector).animate({backgroundColor:original}, {duration:1200});
 								}
-							});
+							});				
 				}
+
+				function upload_move(move)
+				{
+					var m = move;
+					move_str = m.r + " " + m.c + " " + m.i + " " + m.j;
+
+					// Record the move for this game id and timestamp
+					$.ajax({
+								url: "api/set_move.php", 
+								type: "POST",
+								data : {"game_id":game_id, "player":m.player, "move":move_str, "timestamp":timestamp},
+								dataType: "json",
+								success: function(response) { 
+									console.log("Move uploaded successfully");
+								}
+						});
+				}
+
+				function upload_result(winner)
+				{
+					// Record result for this game
+					$.ajax({
+								url: "api/set_result.php", 
+								type: "POST",
+								data : {"game_id":game_id, "winner":winner},
+								dataType: "json",
+								success: function(response) { 
+									console.log("Result uploaded successfully");
+								}
+						});
+					}
 
 				function evaluate(move)
 				{
@@ -392,16 +519,34 @@
 						}
 					}
 
+					// If the winners have still not been assigned, check if board is tied or full and assign Z as the winner
+					if(current_state.winners[m.r][m.c]===null)
+					{
+						// If board is tied, assign Z as the winner
+						if(is_tied(m.r, m.c) || is_full(m.r, m.c)){
+							current_state.winners[m.r][m.c] = {winner:Z, cells: []}
+						}
+					}
+
 					if(is_super_winner(X)){
 						$(uboard_container).block({message:"You have won!"});
+						upload_result(X);
 					}
 					else if(is_super_winner(O)){
 						$(uboard_container).block({message:"You lost!"});
+						upload_result(O);
+					}
+					else if(is_super_tied()){
+						$(uboard_container).block({message:"You have tied the match!"});
+						upload_result(Z);
 					}
 
 					current_state.r = is_finished(m.i, m.j) ? -1 : m.i;
 					current_state.c = is_finished(m.i, m.j) ? -1 : m.j;
 					current_state.player = get_opponent(m.player);
+
+					timestamp+=1;
+					upload_move(m);
 				}
 
 				function tabulate(data)
@@ -446,6 +591,8 @@
 
 					function init()
 					{
+							game_id = uuid.v1();
+							timestamp = 0;
 
 							var sample = ["X",
 												"-1 -1",
