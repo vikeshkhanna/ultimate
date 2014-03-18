@@ -233,11 +233,12 @@
 					return true;
 				}
 
+				// Returns true only if board is either won by a player or full. Not in case of ties. See winner!=Z check. 
 				function is_finished(r, c)
 				{
 					data = current_state.data;
 
-					if(current_state.winners[r][c].winner!=null){
+					if(current_state.winners[r][c].winner!=null && current_state.winners[r][c].winner!=Z){
 						return true;
 					}
 			
@@ -430,7 +431,7 @@
 					if(current_state.winners[m.r][m.c].winner===null)
 					{
 						// If board is tied, assign Z as the winner
-						if(is_tied(m.r, m.c) || is_full(m.r, m.c)){
+						if(is_tied(m.r, m.c)){
 							current_state.winners[m.r][m.c] = {winner:Z, cells: []}
 						}
 					}

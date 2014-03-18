@@ -1,4 +1,4 @@
-$NEWDB = "ultimate.new.db";
+NEWDB="ultimate.new.db";
 
 sqlite3 $NEWDB < create.sql;
 sqlite3 $1 "SELECT distinct game_id, date('now') FROM moves" | sqlite3 $NEWDB ".import /dev/stdin game";

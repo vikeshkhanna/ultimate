@@ -230,7 +230,7 @@ def stats(uboard, player):
 
 			if original == None:
 				winners[i][j] = player
-				total += 25*R*((get_super_winner_inner(winners)==player)+0)
+				total += 40*R*((get_super_winner_inner(winners)==player)+0)
 				winners[i][j] = original
 	
 	return total
@@ -258,7 +258,7 @@ def fx(uboard, player):
 		pretty_print(uboard)
 		print "Stats", player, s1, s2
 
-	return s1-1.3*s2
+	return s1-1.5*s2
 
 def play(uboard, r, c, player, fplayer, depth=0):
 	board = get_board(uboard, r, c)
