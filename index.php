@@ -614,6 +614,8 @@
 							<li><a href="#rules">Rules</a></li>
 							<li><a href="#data">Data</a></li>
 						</ul>
+						<a href="https://twitter.com/share" class="twitter-share-button" data-via="vikeshkhanna">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 					</div>
 			</div>
 
@@ -641,6 +643,12 @@
 					<li><strong>Ties: </strong><span id="stats-ties" class="lead"></span></li>
 					<li><strong>Unfinished games: </strong><span id="stats-unfinished" class="lead"></span></li>
 				</ul>
+			</div>
+		</div>
+			<div class="footer">
+				<div class="container">
+					Built by <a href="http://stanford.edu/~vikesh">Vikesh</a> while procrastinating. 
+				</div>
 			</div>
 		</body>
 </html>
