@@ -546,10 +546,10 @@
 								type: "GET",
 								dataType:"json",
 								success: function(response){
+										var total = parseInt(response["total"])
+										var O_win = parseInt(response[O]);
+										var X_win = parseInt(response[X]);
 										var ties = parseInt(response[Z]);
-										var O_win = response[O];
-										var X_win = response[X];	
-										var total = response[Z];
 										var unfinished = total - (ties+ O_win + X_win);
 
 										$("#stats-total").html(total);

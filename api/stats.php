@@ -26,8 +26,8 @@
 		$db->commit();
 		$db = null;
 
-		$total = $result->fetch()[0];
-		$response['total'] = $total;
+		$total = $result->fetch();
+		$response['total'] = $total[0];
 	}
 	catch(PDOException $e){
 		$response['status'] = 500;
