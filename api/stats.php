@@ -8,9 +8,7 @@
 
 	try{
 		$result->execute();
-		$db->commit();
-		$db = null;
-		
+
 		$items = $result->fetchAll();
 		$response['X']=$response['O']=$response['-']=0;
 
@@ -20,6 +18,16 @@
 		}
 
 		$response['status'] = 200;
+
+		$comm2 = "select count(distinct game_id) from moves;";
+		$result = $db->prepare($comm2);
+		$result->execute();
+
+		$db->commit();
+		$db = null;
+
+		$total = $result->fetch()[0];
+		$response['total'] = $total;
 	}
 	catch(PDOException $e){
 		$response['status'] = 500;

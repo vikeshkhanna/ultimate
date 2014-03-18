@@ -11,7 +11,7 @@
 			<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 			<script src="js/blockui.js"></script>
 			<script src="js/uuid.js"></script>
-			<script src="js/stats.js"></script>
+			<script src="js/chart.js"></script>
 
 			<style>
 		</style>
@@ -496,6 +496,7 @@
 
 					function init()
 					{
+						 	// Generate a new game id and set timestamp to 0
 							game_id = uuid.v1();
 							timestamp = 0;
 
@@ -526,6 +527,8 @@
 
 						restart(uboard_container);
 						$(uboard_container).unblock();
+
+
 					}
 
 					function restart(selector)
@@ -536,9 +539,66 @@
 					}
 
 					$(document).ready(function(){
-							init();
-					});
-			</script>
+						init();
+
+						$.ajax({
+								url: "api/stats.php",
+								type: "GET",
+								dataType:"json",
+								success: function(response){
+										var ties = parseInt(response[Z]);
+										var O_win = response[O];
+										var X_win = response[X];	
+										var total = response[Z];
+										var unfinished = total - (ties+ O_win + X_win);
+
+										$("#stats-total").html(total);
+										$("#stats-X").html(X_win);
+										$("#stats-O").html(O_win);
+										$("#stats-ties").html(ties);
+										$("#stats-unfinished").html(unfinished);
+
+										var labelSize = '16';
+										var labelColor = 'black';
+
+										var data = [
+												{
+													value: ties,
+													color:"lightgray",
+													label:"Ties",
+													labelColor: labelColor,
+													labelFontSize: labelSize
+												},
+												{
+													value : X_win,
+													color: "lightcoral",
+													label:"Human Won",
+													labelColor: labelColor,
+													labelFontSize: labelSize
+												},
+												{
+													value : O_win,
+													color: "lightblue",
+													label:"Bot Won",
+													labelColor: labelColor,
+													labelFontSize: labelSize
+												},
+												{
+													value : unfinished,
+													color: "black",
+													label: "Unfinished",
+													labelColor: "white",
+													labelFontSize: labelSize
+												}			
+											];
+
+									var ctx = document.getElementById("chart-container").getContext("2d");
+									new Chart(ctx).Pie(data);
+								}
+							});
+						});
+
+					</script>
 		</head>
 
 		<body>
@@ -573,6 +633,14 @@
 			</div>
 			<div id="data">
 				<h1 class="page-header">Data</h1>
+				<canvas id="chart-container" width="400" height="400"></canvas>
+				<ul class="list-unstyled">
+					<li><strong>Total games played : </strong><span id="stats-total" class="lead"></span></li>
+					<li><strong>Humans won : </strong><span  id="stats-X" class="lead"></span></li>
+					<li><strong>Bots won: </strong><span id="stats-O" class="lead"></span></li>
+					<li><strong>Ties: </strong><span id="stats-ties" class="lead"></span></li>
+					<li><strong>Unfinished games: </strong><span id="stats-unfinished" class="lead"></span></li>
+				</ul>
 			</div>
 		</body>
 </html>
