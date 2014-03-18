@@ -582,14 +582,7 @@
 													label:"Bot Won",
 													labelColor: labelColor,
 													labelFontSize: labelSize
-												},
-												{
-													value : unfinished,
-													color: "black",
-													label: "Unfinished",
-													labelColor: "white",
-													labelFontSize: labelSize
-												}			
+												}
 											];
 
 									var ctx = document.getElementById("chart-container").getContext("2d");
@@ -607,7 +600,7 @@
 			<div id="outer-uboard-container" class="row">
 					<div id="uboard-container" class="col-xs-7">
 					</div>
-					<div class="col-xs-2">
+					<div class="col-xs-3">
 						<h2>Options</h2>
 						<ul class="list-unstyled">
 							<li><a href="#" onclick="init();">Restart Game</a></li>
@@ -616,6 +609,7 @@
 						</ul>
 						<a href="https://twitter.com/share" class="twitter-share-button" data-via="vikeshkhanna">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+						<p style="margin-top:20px;" class="lead"> Play Ultimate. Beat the bot.</p>
 					</div>
 			</div>
 
@@ -651,4 +645,13 @@
 				</div>
 			</div>
 		</body>
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	  
+	    ga('create', 'UA-49087674-1', 'stanford.edu');
+	    ga('send', 'pageview');
+    </script>
 </html>
