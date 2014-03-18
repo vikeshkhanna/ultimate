@@ -1,0 +1,97 @@
+body
+{
+	background-color:#F7F7F7;
+}
+.hold
+{
+	font-weight:bold;
+}
+
+.win
+{
+	font-weight:bold;
+}
+
+.hold-X
+{
+	color:red;
+}
+
+.win-X
+{
+	background-color:lightcoral;
+}
+
+.win-O
+{
+	background-color:lightblue;
+}
+
+.hold-O
+{
+	color:blue;
+}
+
+.playable-board
+{
+	background-color:lightgreen;				
+}
+
+.playable-cell
+{
+	cursor:pointer;
+}
+
+.playable-cell-X:hover
+{
+	background-color: lightcoral;
+}
+
+.playable-cell-O:hover
+{
+	background-color: lightblue;
+}
+
+table 
+{
+	font-size:20px;
+	border-collapse: collapse;
+}
+
+table tr:first-child td {
+	border-top: 0;
+}
+table tr:last-child td {
+	border-bottom: 0;
+}
+table tr td:first-child,
+table tr th:first-child {
+	border-left: 0;
+}
+table tr td:last-child,
+table tr th:last-child {
+	border-right: 0;
+}
+
+table.uboard td 
+{
+	border: 2px solid black;
+}
+
+table.uboard tr td
+{
+	padding:10px;
+}
+
+table.board tr td
+{
+	padding:15px;
+	width:60px;
+	height:60px;
+	text-align:center;
+}
+
+table.board td {
+	border: 1px solid black;
+}
+

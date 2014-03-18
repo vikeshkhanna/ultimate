@@ -3,6 +3,7 @@
 	<head>
 		<title>Ultimate Tic Tac Toe</title>
 			<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+			<link rel="stylesheet" href="css/main.css">
 			<script src="http://d3js.org/d3.v3.min.js"></script>
 			<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 			<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
@@ -10,105 +11,10 @@
 			<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 			<script src="js/blockui.js"></script>
 			<script src="js/uuid.js"></script>
+			<script src="js/stats.js"></script>
 
 			<style>
-				body
-				{
-					background-color:#F7F7F7;
-				}
-				.hold
-				{
-					font-weight:bold;
-				}
-
-				.win
-				{
-					font-weight:bold;
-				}
-
-				.hold-X
-				{
-					color:red;
-				}
-
-				.win-X
-				{
-					background-color:lightcoral;
-				}
-
-				.win-O
-				{
-					background-color:lightblue;
-				}
-
-				.hold-O
-				{
-					color:blue;
-				}
-
-				.playable-board
-				{
-					background-color:lightgreen;				
-				}
-
-				.playable-cell
-				{
-					cursor:pointer;
-				}
-
-				.playable-cell-X:hover
-				{
-					background-color: lightcoral;
-				}
-
-				.playable-cell-O:hover
-				{
-					background-color: lightblue;
-				}
-
-				table 
-				{
-					font-size:20px;
-					border-collapse: collapse;
-				}
-
-				table tr:first-child td {
-					border-top: 0;
-				}
-				table tr:last-child td {
-					border-bottom: 0;
-				}
-				table tr td:first-child,
-				table tr th:first-child {
-					border-left: 0;
-				}
-				table tr td:last-child,
-				table tr th:last-child {
-					border-right: 0;
-				}
-
-				table.uboard td 
-				{
-					border: 2px solid black;
-				}
-
-				table.uboard tr td
-				{
-					padding:10px;
-				}
-
-				table.board tr td
-				{
-					padding:15px;
-					width:60px;
-					height:60px;
-					text-align:center;
-				}
-
-				table.board td {
-					border: 1px solid black;
-				}
-			</style>
+		</style>
 
 			<script type="text/javascript">
 				var X='X';
@@ -301,7 +207,6 @@
 						// Not tied only if either no X or no Y and no board is tied
 						for (var j=0;j<4;j++)
 						{
-							console.log(cache);
 							if((cache[j][X]===0 || cache[j][O]===0) && cache[j][Z]===0){
 								return false;
 							}
@@ -655,7 +560,6 @@
 			<div id="rules">
 				<h1 class="page-header">Rules</h1>
 				<p>Like the original Tic-Tac-Toe, Player 1 is represented by X and Player 2 is represented by O. To start the game, Player 1 places an X on any one of the 81 empty squares, and then players alternate turns. However, after the initial move, players must play the board that mirrors the square from the previous player. If the next move is to a board that has already been won, then that player may choose an open square on any board for that turn. You win boards as usual, but you win the game when you win three boards together (across rows, columns or diagnols). <br><br> For instance, if the first move by X is the first image, player O is forced to play in the top-right corner as shown in the right image. </p>
-
 				<p>
 					<div class="row">
 						<img class="col-md-5" src="http://mathwithbaddrawings.files.wordpress.com/2013/06/3-first-move.jpg" />
