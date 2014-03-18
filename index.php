@@ -425,7 +425,7 @@
 					}
 
 					// If the winners have still not been assigned, check if board is tied or full and assign Z as the winner
-					if(current_state.winners[m.r][m.c]===null)
+					if(current_state.winners[m.r][m.c].winner===null)
 					{
 						// If board is tied, assign Z as the winner
 						if(is_tied(m.r, m.c) || is_full(m.r, m.c)){
@@ -611,15 +611,10 @@
 						</ul>
 						<a href="https://twitter.com/share" class="twitter-share-button" data-via="vikeshkhanna">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-<<<<<<< HEAD
 
 						<p class="lead" style="margin-top:10px">Play Ultimate. Beat the bot. </p>
 						<canvas id="small-chart-container" width="200" height="200"></canvas>
-						</div>
-=======
-						<p style="margin-top:20px;" class="lead"> Play Ultimate. Beat the bot.</p>
 					</div>
->>>>>>> 11fe49f3eebf6ad1750e3d44fff55f430f820004
 			</div>
 
 			<div id="rules">

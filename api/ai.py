@@ -258,7 +258,7 @@ def fx(uboard, player):
 		pretty_print(uboard)
 		print "Stats", player, s1, s2
 
-	return s1-s2
+	return s1-1.3*s2
 
 def play(uboard, r, c, player, fplayer, depth=0):
 	board = get_board(uboard, r, c)
