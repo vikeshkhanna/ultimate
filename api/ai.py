@@ -155,6 +155,9 @@ def get_super_winner_inner(winners):
 			found = False
 			break
 
+	if found: 
+		return first
+
 	found = True
 	first = winners[0][N-1]
 
