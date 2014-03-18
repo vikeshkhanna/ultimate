@@ -6,9 +6,15 @@
 			<script src="http://d3js.org/d3.v3.min.js"></script>
 			<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 			<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+			<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 			<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+			<script src="js/blockui.js"></script>
 
 			<style>
+				body
+				{
+					background-color:#F7F7F7;
+				}
 				.hold
 				{
 					font-weight:bold;
@@ -108,6 +114,7 @@
 				var O='O';
 				var Z='-';
 				var current_state = {}
+				var uboard_container = "#uboard-container";
 
 				function get_board_id(r, c)
 				{
@@ -217,13 +224,6 @@
 					return lst.join("\n");
 				}
 
-
-				function mark_current(r, c)
-				{
-					var current = d3.select("#"+get_board_id(1,1))
-					return current;
-				}
-
 				function is_finished(r, c)
 				{
 					data = current_state.data;
@@ -305,7 +305,7 @@
 							.attr("class", function(d){
 										var val = current_state.data[d.r][d.c][d.i][d.j];
 
-										if(val===Z && is_board_playable(d.r, d.c)){
+										if(val===Z && current_state.player===X && is_board_playable(d.r, d.c)){
 												return "playable-cell playable-cell-"+current_state.player;
 											}
 		
@@ -326,11 +326,11 @@
 										return "hold hold-"+val;	
 									})
 							.on("click", function(d){
-									if(d.value===Z && is_board_playable(d.r, d.c)){
+									if(d.value===Z && current_state.player===X && is_board_playable(d.r, d.c)){
 										// This will always be X
 										move = {player: current_state.player, r:d.r, c:d.c, i:d.i, j:d.j};
 										evaluate(move);
-										restart();
+										restart(uboard_container);
 										ai();
 									}
 								});
@@ -346,10 +346,16 @@
 								data: {"state" : serialize(current_state)}, 
 								dataType:"json",
 								success: function(response){
-									p = response["state"].split(" ");
+									p = response["move"].split(" ");
 									move = {player: O, r:parseInt(p[0]), c:parseInt(p[1]), i:parseInt(p[2]), j:parseInt(p[3])};
 									evaluate(move);
-									restart();
+									restart(uboard_container);
+
+									// After restart animate the td
+									var selector = "#" + get_cell_id(move.r, move.c, move.i, move.j);
+									var original = $(selector).css('background-color');
+									$(selector).css('background-color', 'yellow');
+									$(selector).animate({backgroundColor:original}, {duration:1200});
 								}
 							});
 				}
@@ -387,12 +393,15 @@
 					}
 
 					if(is_super_winner(X)){
-						alert("You have won!");
+						$(uboard_container).block({message:"You have won!"});
 					}
+					else if(is_super_winner(O)){
+						$(uboard_container).block({message:"You lost!"});
+					}
+
 					current_state.r = is_finished(m.i, m.j) ? -1 : m.i;
 					current_state.c = is_finished(m.i, m.j) ? -1 : m.j;
 					current_state.player = get_opponent(m.player);
-					console.log(serialize(current_state));
 				}
 
 				function tabulate(data)
@@ -412,8 +421,8 @@
 							}
 						}
 
-						d3.select(".uboard").remove();
-						var uboard = d3.select("body").append("table").attr("class", "uboard")
+						var uboard = document.createElement("table");
+						uboard = d3.select(uboard).attr("class", "uboard")
 						ubody = uboard.append("tbody")
 
 						var urows = ubody.selectAll("tr")
@@ -437,6 +446,7 @@
 
 					function init()
 					{
+
 							var sample = ["X",
 												"-1 -1",
 												"---------",
@@ -462,40 +472,56 @@
 							}
 						}
 
-						restart();
+						restart(uboard_container);
+						$(uboard_container).unblock();
 					}
 
-					function restart()
+					function restart(selector)
 					{
+						d3.select(".uboard").remove();	
 						var uboard = tabulate(current_state.data);
-						mark_current(current_state.r, current_state.c);
+						d3.select(selector).append(function(d){ return uboard[0][0]; });
 					}
 
 					$(document).ready(function(){
-						/*	
-						data = [
-										[
-											[[1,2,3],[4,5,6],[7,8,9]], 
-											[[10, 11, 12], [13,14,15], [16,17,18]], 
-											[[19,20,21],[22,23,24], [25,26,27]]
-										],
-										[
-											[[1,2,3],[4,5,6],[7,8,9]], 
-											[[10, 11, 12], [13,14,15], [16,17,18]], 
-											[[19,20,21],[22,23,24], [25,26,27]]
-										],
-										[
-											[[1,2,3],[4,5,6],[7,8,9]], 
-											[[10, 11, 12], [13,14,15], [16,17,18]], 
-											[[19,20,21],[22,23,24], [25,26,27]]
-										]
-										]; 
-						 */
 							init();
 					});
 			</script>
 		</head>
 
 		<body>
+		<div class="container">
+			<h1 class="page-header">Ultimate Tic-Tac Toe</h1>
+			<div id="outer-uboard-container" class="row">
+					<div id="uboard-container" class="col-xs-7">
+					</div>
+					<div class="col-xs-2">
+						<h2>Options</h2>
+						<ul class="list-unstyled">
+							<li><a href="#" onclick="init();">Restart Game</a></li>
+							<li><a href="#rules">Rules</a></li>
+							<li><a href="#data">Data</a></li>
+						</ul>
+					</div>
+			</div>
+
+			<div id="rules">
+				<h1 class="page-header">Rules</h1>
+				<p>Like the original Tic-Tac-Toe, Player 1 is represented by X and Player 2 is represented by O. To start the game, Player 1 places an X on any one of the 81 empty squares, and then players alternate turns. However, after the initial move, players must play the board that mirrors the square from the previous player. If the next move is to a board that has already been won, then that player may choose an open square on any board for that turn. You win boards as usual, but you win the game when you win three boards together (across rows, columns or diagnols). <br><br> For instance, if the first move by X is the first image, player O is forced to play in the top-right corner as shown in the right image. </p>
+
+				<p>
+					<div class="row">
+						<img class="col-md-5" src="http://mathwithbaddrawings.files.wordpress.com/2013/06/3-first-move.jpg" />
+						<img class="col-md-5" src="http://mathwithbaddrawings.files.wordpress.com/2013/06/4-second-move.jpg" />
+					</div>
+				</p>
+	
+				<p>
+					Read more about the game <a href="http://mathwithbaddrawings.com/2013/06/16/ultimate-tic-tac-toe/" target="_blank">here.</a>
+				</p>
+			</div>
+			<div id="data">
+				<h1 class="page-header">Data</h1>
+			</div>
 		</body>
 </html>
