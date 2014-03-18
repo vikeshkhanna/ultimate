@@ -19,7 +19,7 @@
 
 		$response['status'] = 200;
 
-		$comm2 = "select count(distinct game_id) from moves;";
+		$comm2 = "select count(distinct game_id) from game;";
 		$result = $db->prepare($comm2);
 		$result->execute();
 

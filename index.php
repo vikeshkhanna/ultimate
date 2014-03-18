@@ -374,6 +374,7 @@
 								dataType: "json",
 								success: function(response) { 
 									console.log("Move uploaded successfully");
+									console.log(response);
 								}
 						});
 				}
@@ -388,6 +389,7 @@
 								dataType: "json",
 								success: function(response) { 
 									console.log("Result uploaded successfully");
+									console.log(response);
 								}
 						});
 					}

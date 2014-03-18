@@ -7,11 +7,18 @@
 	$player = $_POST['player'];
 	$move = $_POST['move'];
 
-	$db->beginTransaction();
-	$comm = "insert into moves values(:game_id, :player, :timestamp, :move)";
-	$result = $db->prepare($comm);
-
 	try{
+
+			$db->beginTransaction();
+
+			if($timestamp==1){
+				$comm = "insert into game values(:game_id, date('now'))";
+				$result = $db->prepare($comm);
+				$result->execute(array(":game_id" => $game_id));
+			}
+
+		$comm = "insert into moves values(:game_id, :player, :timestamp, :move)";
+		$result = $db->prepare($comm);
 		$result->execute(array(":game_id"=> $game_id, ":player"=>$player, ":timestamp"=>$timestamp, ":move"=>$move));
 		$db->commit();
 		$db = null;
