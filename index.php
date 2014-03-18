@@ -611,10 +611,15 @@
 						</ul>
 						<a href="https://twitter.com/share" class="twitter-share-button" data-via="vikeshkhanna">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+<<<<<<< HEAD
 
 						<p class="lead" style="margin-top:10px">Play Ultimate. Beat the bot. </p>
 						<canvas id="small-chart-container" width="200" height="200"></canvas>
 						</div>
+=======
+						<p style="margin-top:20px;" class="lead"> Play Ultimate. Beat the bot.</p>
+					</div>
+>>>>>>> 11fe49f3eebf6ad1750e3d44fff55f430f820004
 			</div>
 
 			<div id="rules">
@@ -651,4 +656,13 @@
 			</div>
 			<!--Footer ends-->
 		</body>
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	  
+	    ga('create', 'UA-49087674-1', 'stanford.edu');
+	    ga('send', 'pageview');
+    </script>
 </html>
