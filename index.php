@@ -558,7 +558,7 @@
 										$("#stats-ties").html(ties);
 										$("#stats-unfinished").html(unfinished);
 
-										var labelSize = '16';
+										var labelSize = '14';
 										var labelColor = 'black';
 
 										var data = [
@@ -582,18 +582,13 @@
 													label:"Bot Won",
 													labelColor: labelColor,
 													labelFontSize: labelSize
-												},
-												{
-													value : unfinished,
-													color: "black",
-													label: "Unfinished",
-													labelColor: "white",
-													labelFontSize: labelSize
-												}			
+												}
 											];
 
-									var ctx = document.getElementById("chart-container").getContext("2d");
-									new Chart(ctx).Pie(data);
+									var ctx1 = document.getElementById("chart-container").getContext("2d");
+									var ctx2 = document.getElementById("small-chart-container").getContext("2d");
+									new Chart(ctx1).Pie(data);
+									new Chart(ctx2).Pie(data);
 								}
 							});
 						});
@@ -607,7 +602,7 @@
 			<div id="outer-uboard-container" class="row">
 					<div id="uboard-container" class="col-xs-7">
 					</div>
-					<div class="col-xs-2">
+					<div class="col-xs-3">
 						<h2>Options</h2>
 						<ul class="list-unstyled">
 							<li><a href="#" onclick="init();">Restart Game</a></li>
@@ -616,7 +611,10 @@
 						</ul>
 						<a href="https://twitter.com/share" class="twitter-share-button" data-via="vikeshkhanna">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-					</div>
+
+						<p class="lead" style="margin-top:10px">Play Ultimate. Beat the bot. </p>
+						<canvas id="small-chart-container" width="200" height="200"></canvas>
+						</div>
 			</div>
 
 			<div id="rules">
@@ -645,10 +643,12 @@
 				</ul>
 			</div>
 		</div>
+			<!--Footer begins-->
 			<div class="footer">
 				<div class="container">
 					Built by <a href="http://stanford.edu/~vikesh">Vikesh</a> while procrastinating. 
 				</div>
 			</div>
+			<!--Footer ends-->
 		</body>
 </html>
