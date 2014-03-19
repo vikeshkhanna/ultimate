@@ -338,6 +338,14 @@
 
 						return table;
 				}
+
+				function highlight_fade(selector, duration, original)
+				{
+					var restore = (original === undefined ? $(selector).css('background-color') : original);
+					var delay = (duration === undefined ? 1200 : duration);
+					$(selector).css('background-color', 'yellow');
+					$(selector).animate({backgroundColor:restore}, {duration:delay});
+				}
 	
 				function ai()
 				{
@@ -355,9 +363,7 @@
 
 									// After restart animate the td
 									var selector = "#" + get_cell_id(move.r, move.c, move.i, move.j);
-									var original = $(selector).css('background-color');
-									$(selector).css('background-color', 'yellow');
-									$(selector).animate({backgroundColor:original}, {duration:1200});
+									highlight_fade(selector);
 								}
 							});				
 				}
@@ -452,6 +458,7 @@
 					}
 
 					$("#stats-user-score").html(timestamp);
+					highlight_fade("#stats-user-score", 1200, "#F7F7F7");
 
 					current_state.r = is_finished(m.i, m.j) ? -1 : m.i;
 					current_state.c = is_finished(m.i, m.j) ? -1 : m.j;
@@ -605,6 +612,8 @@
 								success: function(response){
 									$("#stats-best-score").html(response["best"]);
 									$("#stats-worst-score").html(response["worst"]);
+									$("#stats-avgX-score").html(parseFloat(response["avg_X"]).toFixed(2));
+									$("#stats-avgO-score").html(parseFloat(response["avg_O"]).toFixed(2));
 								}
 							});
 
@@ -638,6 +647,8 @@
 								<li><strong>Your Score (Moves): </strong><span id="stats-user-score" class="lead">0</span></i>
 								<li><strong>Best Score : </strong><span id="stats-best-score" class="lead"></span></i>
 								<li><strong>Worst Score : </strong><span id="stats-worst-score" class="lead"></span></i>
+								<li><strong>Average moves to win (X) : </strong><span id="stats-avgX-score" class="lead"></span></i>
+								<li><strong>Average moves to win (Bot) : </strong><span id="stats-avgO-score" class="lead"></span></i>
 							</ul>
 						</p>
 					</div>
