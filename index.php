@@ -554,13 +554,13 @@
 										var O_win = parseInt(response[O]);
 										var X_win = parseInt(response[X]);
 										var ties = parseInt(response[Z]);
-										var unfinished = total - (ties+ O_win + X_win);
+										var human_ratio = parseFloat(X_win*100.0/(ties+ O_win + X_win)).toFixed(2);
 
 										$("#stats-total").html(total);
 										$("#stats-X").html(X_win);
 										$("#stats-O").html(O_win);
 										$("#stats-ties").html(ties);
-										$("#stats-unfinished").html(unfinished);
+										$("#stats-human-ratio").html(human_ratio);
 
 										var labelSize = '14';
 										var labelColor = 'black';
@@ -643,7 +643,7 @@
 					<li><strong>Humans won : </strong><span  id="stats-X" class="lead"></span></li>
 					<li><strong>Bots won: </strong><span id="stats-O" class="lead"></span></li>
 					<li><strong>Ties: </strong><span id="stats-ties" class="lead"></span></li>
-					<li><strong>Unfinished games: </strong><span id="stats-unfinished" class="lead"></span></li>
+					<li><strong>Humans win <span id="stats-human-ratio" class="lead"></span> % of the games</strong></li>
 				</ul>
 			</div>
 		</div>
