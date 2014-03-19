@@ -451,6 +451,8 @@
 						upload_result(Z);
 					}
 
+					$("#stats-user-score").html(timestamp);
+
 					current_state.r = is_finished(m.i, m.j) ? -1 : m.i;
 					current_state.c = is_finished(m.i, m.j) ? -1 : m.j;
 					current_state.player = get_opponent(m.player);
@@ -500,21 +502,22 @@
 
 					function init()
 					{
-						 	// Generate a new game id and set timestamp to 0
-							game_id = uuid.v1();
-							timestamp = 0;
+						// Generate a new game id and set timestamp to 0
+						game_id = uuid.v1();
+						timestamp = 0;
+						$("#stats-user-score").html(timestamp);
 
-							var sample = ["X",
-												"-1 -1",
-												"---------",
-												"---------", 
-												"---------",
-												"---------",
-												"---------",
-												"---------",
-												"---------",
-												"---------",
-												"---------"].join("\n");
+						var sample = ["X",
+											"-1 -1",
+											"---------",
+											"---------", 
+											"---------",
+											"---------",
+											"---------",
+											"---------",
+											"---------",
+											"---------",
+											"---------"].join("\n");
 
 						current_state = deserialize(sample);
 						current_state.player = X;
@@ -531,8 +534,6 @@
 
 						restart(uboard_container);
 						$(uboard_container).unblock();
-
-
 					}
 
 					function restart(selector)
@@ -595,6 +596,19 @@
 									new Chart(ctx2).Pie(data);
 								}
 							});
+
+
+							$.ajax({
+								url: "api/score.php",
+								type: "GET",
+								dataType:"json",
+								success: function(response){
+									$("#stats-best-score").html(response["best"]);
+									$("#stats-worst-score").html(response["worst"]);
+								}
+							});
+
+						 	
 						});
 
 					</script>
@@ -618,6 +632,14 @@
 
 						<p class="lead" style="margin-top:10px">Play Ultimate. Beat the bot. </p>
 						<canvas id="small-chart-container" width="200" height="200"></canvas>
+						
+						<p style="margin-top:10px">
+							<ul class="list-unstyled">
+								<li><strong>Your Score (Moves): </strong><span id="stats-user-score" class="lead">0</span></i>
+								<li><strong>Best Score : </strong><span id="stats-best-score" class="lead"></span></i>
+								<li><strong>Worst Score : </strong><span id="stats-worst-score" class="lead"></span></i>
+							</ul>
+						</p>
 					</div>
 			</div>
 
@@ -655,13 +677,15 @@
 			</div>
 			<!--Footer ends-->
 		</body>
-	<script>
-	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-			      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	  
-	    ga('create', 'UA-49087674-1', 'stanford.edu');
-	    ga('send', 'pageview');
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-49142461-1', 'webfactional.com');
+		  ga('send', 'pageview');
+
+		</script>
     </script>
 </html>

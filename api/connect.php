@@ -1,7 +1,7 @@
 <?php
 	function get_db_handle()
 		{
-			$dbname = dirname(__FILE__)."/ultimate2.db"; 
+			$dbname = dirname(__FILE__)."/ultimate.db"; 
 
 			try {
 				$db = new PDO("sqlite:" . $dbname);
