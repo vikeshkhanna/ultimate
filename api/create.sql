@@ -3,20 +3,15 @@ CREATE TABLE moves(
 	player text,
 	timestamp integer, 
 	move text,
-	constraint moves_fk foreign key(game_id) references game(game_id)
 );
 
 CREATE TABLE result(
 	game_id number,
  	winner text,
-	constraint result_fk foreign key(game_id) references game(game_id)
 );
-
-create index if not exists result_winner on result(winner);
 
 CREATE TABLE game(
-	game_id number primary key, 
-	datetime text
+	game_id,
+	datetime text,
+	score integer
 );
-
-create index if not exists result_winner on result(winner);

@@ -386,7 +386,7 @@
 					$.ajax({
 								url: "api/set_result.php", 
 								type: "POST",
-								data : {"game_id":game_id, "winner":winner},
+								data : {"game_id":game_id, "winner":winner, "score":timestamp},
 								dataType: "json",
 								success: function(response) { 
 									console.log("Result uploaded successfully");
@@ -398,6 +398,8 @@
 				function evaluate(move)
 				{
 					m = move;
+					timestamp+=1;
+
 					console.log("Evaluating")
 					console.log(m);
 
@@ -453,7 +455,6 @@
 					current_state.c = is_finished(m.i, m.j) ? -1 : m.j;
 					current_state.player = get_opponent(m.player);
 
-					timestamp+=1;
 					upload_move(m);
 				}
 
