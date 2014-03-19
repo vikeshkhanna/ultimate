@@ -2,19 +2,17 @@
 	include "connect.php";
 	$db = get_db_handle();
 	
-	$db->beginTransaction();
-	$comm = "select * from result;";
-	$result = $db->prepare($comm);
 
 	try{
+		$db->beginTransaction();
+		$comm = "select winner, count(*) cnt from result group by winner;";
+		$result = $db->prepare($comm);
 		$result->execute();
-
 		$items = $result->fetchAll();
-		$response['X']=$response['O']=$response['-']=0;
 
 		foreach($items as $item)
 		{
-			$response[$item["winner"]]+=1;
+			$response[$item["winner"]]=$item["cnt"];
 		}
 
 		$response['status'] = 200;
