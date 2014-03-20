@@ -611,7 +611,6 @@
 								dataType:"json",
 								success: function(response){
 									$("#stats-best-score").html(response["best"]);
-									$("#stats-worst-score").html(response["worst"]);
 									$("#stats-avgX-score").html(parseFloat(response["avg_X"]).toFixed(2));
 									$("#stats-avgO-score").html(parseFloat(response["avg_O"]).toFixed(2));
 								}
@@ -624,6 +623,15 @@
 		</head>
 
 		<body>
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=423906327755939";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+
 		<div class="container">
 			<h1 class="page-header">Ultimate Tic-Tac Toe</h1>
 			<div id="outer-uboard-container" class="row">
@@ -636,21 +644,22 @@
 							<li><a href="#rules">Rules</a></li>
 							<li><a href="#data">Data</a></li>
 						</ul>
-						<a href="https://twitter.com/share" class="twitter-share-button" data-via="vikeshkhanna">Tweet</a>
+						
+						<ul class="list-inline">
+						<li><a href="https://twitter.com/share" class="twitter-share-button" data-via="vikeshkhanna">Tweet</a></li>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 
-						<p class="lead" style="margin-top:10px">Play Ultimate. Beat the bot. </p>
+<li><div class="fb-like" data-href="http://vikeshkhanna.webfactional.com/ultimate/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div></li>
+						</ul>
+						<p class="lead" style="margin-top:25px">Play Ultimate. Beat the bot. </p>
 						<canvas id="small-chart-container" width="200" height="200"></canvas>
 						
-						<p style="margin-top:10px">
-							<ul class="list-unstyled">
-								<li><strong>Your Score (Moves): </strong><span id="stats-user-score" class="lead">0</span></i>
-								<li><strong>Best Score : </strong><span id="stats-best-score" class="lead"></span></i>
-								<li><strong>Worst Score : </strong><span id="stats-worst-score" class="lead"></span></i>
-								<li><strong>Average moves to win (X) : </strong><span id="stats-avgX-score" class="lead"></span></i>
-								<li><strong>Average moves to win (Bot) : </strong><span id="stats-avgO-score" class="lead"></span></i>
-							</ul>
-						</p>
+						<ul class="list-unstyled" style="margin-top:25px">
+							<li><strong>Your Score (Moves): </strong><span id="stats-user-score" class="lead">0</span></i>
+							<li><strong>Best Score : </strong><span id="stats-best-score" class="lead"></span></i>
+							<li><strong>Average moves to win (X) : </strong><span id="stats-avgX-score" class="lead"></span></i>
+							<li><strong>Average moves to win (Bot) : </strong><span id="stats-avgO-score" class="lead"></span></i>
+						</ul>
 					</div>
 			</div>
 
@@ -683,7 +692,7 @@
 			<!--Footer begins-->
 			<div class="footer">
 				<div class="container">
-					Built by <a href="http://stanford.edu/~vikesh">Vikesh</a> while procrastinating. 
+					Built by <a href="http://stanford.edu/~vikesh">Vikesh</a>
 				</div>
 			</div>
 			<!--Footer ends-->
@@ -696,7 +705,5 @@
 
 		  ga('create', 'UA-49142461-1', 'webfactional.com');
 		  ga('send', 'pageview');
-
 		</script>
-    </script>
 </html>
