@@ -355,6 +355,8 @@
 								type: "GET",
 								data: {"state" : serialize(current_state)}, 
 								dataType:"json",
+								tryCount : 0,
+								retryLimit : 3,
 								success: function(response){
 									p = response["move"].split(" ");
 									move = {player: O, r:parseInt(p[0]), c:parseInt(p[1]), i:parseInt(p[2]), j:parseInt(p[3])};
@@ -364,6 +366,11 @@
 									// After restart animate the td
 									var selector = "#" + get_cell_id(move.r, move.c, move.i, move.j);
 									highlight_fade(selector);
+								},
+								error: function(xhr, textStatus, errorThrown){
+									console.log("Retrying AI");
+									this.tryCount+=1;
+									$.ajax(this);
 								}
 							});				
 				}

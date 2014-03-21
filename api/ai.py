@@ -26,6 +26,7 @@ def read_board(N):
 	
 	return board
 
+# Returns true if the board has a winner, or if all the cells have been occupised
 def is_finished(board):
 	if get_winner(board)!=None:
 		return True
@@ -194,6 +195,9 @@ def uset(uboard, r, c, i, j, val):
 	uboard[3*r+i][3*c+j] = val
 
 def local_reward(board, player):
+	if is_finished(board):
+		return 0
+
 	for i in range(N):
 		for j in range(N):
 			original = board[i][j]
@@ -258,7 +262,7 @@ def fx(uboard, player):
 		pretty_print(uboard)
 		print "Stats", player, s1, s2
 
-	return s1-1.5*s2
+	return s1-2.0*s2
 
 def play(uboard, r, c, player, fplayer, depth=0):
 	board = get_board(uboard, r, c)
